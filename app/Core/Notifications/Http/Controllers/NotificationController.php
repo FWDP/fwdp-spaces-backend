@@ -16,12 +16,12 @@ class NotificationController extends Controller
             ->paginate(20);
     }
 
-    function markRead(Notification $notification)
+    public function markRead(Notification $notification)
     {
         $notification->markAsRead();
 
         return response()->json([
-            'message' => 'Notification marked as read.'
+            'message' => 'Notification marked as read.',
         ]);
     }
 }

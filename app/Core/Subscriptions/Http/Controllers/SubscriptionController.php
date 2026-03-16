@@ -2,7 +2,6 @@
 
 namespace App\Core\Subscriptions\Http\Controllers;
 
-use App\Core\Subscriptions\Models\Subscription;
 use App\Core\Subscriptions\Models\SubscriptionPlan;
 use App\Core\Subscriptions\Services\SubscriptionService;
 use App\Http\Controllers\Controller;
@@ -17,7 +16,7 @@ class SubscriptionController extends Controller
         $this->subscriptionService = $subscriptionService;
     }
 
-    function current(Request $request)
+    public function current(Request $request)
     {
         return response()->json([
             'subscription' => $this->subscriptionService->getCurrentSubscription($request->user()),

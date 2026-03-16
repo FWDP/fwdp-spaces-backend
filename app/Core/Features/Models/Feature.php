@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Feature extends Model
 {
     protected $fillable = [
-      'key',
-      'name',
-      'enabled'
+        'key',
+        'name',
+        'enabled',
     ];
 
     public function plans(): BelongsToMany

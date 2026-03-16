@@ -12,7 +12,9 @@ class BasePolicy
     {
         $permission = PermissionMap::permissionFor($ability);
 
-        if (!$permission) return false;
+        if (! $permission) {
+            return false;
+        }
 
         return $user->hasPermission(Permission::from($permission));
     }

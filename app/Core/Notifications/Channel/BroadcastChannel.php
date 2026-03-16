@@ -4,7 +4,6 @@ namespace App\Core\Notifications\Channel;
 
 use App\Core\Notifications\Models\Notification;
 use App\Core\Notifications\Models\NotificationDelivery;
-use App\Models\User;
 
 class BroadcastChannel
 {
@@ -14,7 +13,7 @@ class BroadcastChannel
             'notification_id' => $notification->id,
             'channel' => 'broadcast',
             'status' => 'sent',
-            'created_at' => now()
+            'created_at' => now(),
         ]);
     }
 }

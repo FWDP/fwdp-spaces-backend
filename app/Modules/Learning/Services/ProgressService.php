@@ -2,8 +2,6 @@
 
 namespace App\Modules\Learning\Services;
 
-
-
 use App\Modules\Learning\Models\Lesson;
 use App\Modules\Learning\Models\LessonCompletion;
 

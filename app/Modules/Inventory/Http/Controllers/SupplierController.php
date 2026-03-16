@@ -31,6 +31,7 @@ class SupplierController extends Controller
     public function destroy(int $supplierId): JsonResponse
     {
         $this->service->deleteSupplier(Supplier::findOrFail($supplierId));
+
         return response()->json(['message' => 'Supplier deactivated.']);
     }
 }

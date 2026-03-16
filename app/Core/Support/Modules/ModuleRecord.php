@@ -16,7 +16,7 @@ class ModuleRecord extends Model
     ];
 
     protected $casts = [
-        'enabled'      => 'boolean',
+        'enabled' => 'boolean',
         'installed_at' => 'datetime',
     ];
 }

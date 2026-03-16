@@ -10,7 +10,7 @@ class SettingsService
     {
         $setting = Setting::query()->where('key', $key)->first();
 
-        return $setting ? $this->castValue($setting): $default;
+        return $setting ? $this->castValue($setting) : $default;
     }
 
     public function set(
@@ -18,12 +18,11 @@ class SettingsService
         $value,
         string $type = 'string',
         ?string $group = null
-    )
-    {
+    ) {
         return Setting::query()
             ->updateOrCreate(
                 ['key' => $key],
-                ['value' => $value, 'type' => $type, 'group'=>$group]
+                ['value' => $value, 'type' => $type, 'group' => $group]
             );
     }
 

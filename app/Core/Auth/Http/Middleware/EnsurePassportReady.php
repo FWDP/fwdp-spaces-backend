@@ -9,7 +9,7 @@ class EnsurePassportReady
 {
     public function handle($request, Closure $next)
     {
-        if (!class_exists(Passport::class)) {
+        if (! class_exists(Passport::class)) {
             abort(500, 'Passport is not installed.');
         }
 

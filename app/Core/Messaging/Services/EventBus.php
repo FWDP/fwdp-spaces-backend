@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Event;
 
 class EventBus implements MessageBus
 {
-
     public function dispatch(object $event): void
     {
         Event::dispatch($event);

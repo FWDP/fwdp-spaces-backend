@@ -49,7 +49,7 @@ return [
 
     'paymongo' => [
         'key' => env('PAYMONGO_SECRET_KEY'),
-        'base'=> env('PAYMONGO_BASE'),
-    ]
+        'base' => env('PAYMONGO_BASE'),
+    ],
 
 ];

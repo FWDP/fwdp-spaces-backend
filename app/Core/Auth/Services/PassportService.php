@@ -7,7 +7,7 @@ use Laravel\Passport\Token;
 
 class PassportService
 {
-    public function createPersonalAccessToken(User $user, string $name='auth_token'): string
+    public function createPersonalAccessToken(User $user, string $name = 'auth_token'): string
     {
         return $user->createToken($name)->accessToken;
     }
@@ -22,7 +22,7 @@ class PassportService
         $user->token()->revoke();
     }
 
-    public function createPasswordGrantToken(User $user, string $name='password_grant'): string
+    public function createPasswordGrantToken(User $user, string $name = 'password_grant'): string
     {
         return $user->createToken($name)->accessToken;
     }

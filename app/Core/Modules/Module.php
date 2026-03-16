@@ -5,7 +5,9 @@ namespace App\Core\Modules;
 class Module
 {
     protected string $name;
+
     protected string $path;
+
     protected array $manifest;
 
     public function __construct(string $name, string $path, array $manifest)
@@ -19,12 +21,12 @@ class Module
     {
         return $this->name;
     }
-    
+
     public function path(): string
     {
         return $this->path;
     }
-    
+
     public function manifest(): array
     {
         return $this->manifest;

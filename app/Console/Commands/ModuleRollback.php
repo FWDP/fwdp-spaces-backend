@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Core\Support\ModuleRegistry;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
@@ -29,26 +28,24 @@ class ModuleRollback extends Command
      */
     public function handle(): int
     {
-        $this->info("Rolling back module...");
+        $this->info('Rolling back module...');
         $studly = Str::studly($this->argument('module'));
 
-        if (is_dir(app_path("Modules/{$studly}/database/migrations")))
-        {
+        if (is_dir(app_path("Modules/{$studly}/database/migrations"))) {
             Artisan::call('migrate:rollback', [
                 '--path' => "app/Modules/{$studly}/database/migrations",
-                '--force' => true
+                '--force' => true,
             ]);
 
             $this->line(Artisan::output());
 
             $this->info("Migration for module [{$studly}] successfully executed.");
         } else {
-            $this->info("No module-specific migrations found. ");
+            $this->info('No module-specific migrations found. ');
         }
 
-        $this->info("Migrations rollback completed.");
+        $this->info('Migrations rollback completed.');
 
         return CommandAlias::SUCCESS;
     }
-
 }

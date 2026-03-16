@@ -20,6 +20,7 @@ class SupplierService
     public function updateSupplier(Supplier $supplier, array $data): Supplier
     {
         $supplier->update($data);
+
         return $supplier->fresh();
     }
 

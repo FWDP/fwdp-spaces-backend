@@ -10,7 +10,7 @@ class CreateJobApplicationRequest extends FormRequest
     {
         return [
             'cover_letter' => 'nullable|string',
-            'resume_path'  => 'nullable|string|max:500',
+            'resume_path' => 'nullable|string|max:500',
         ];
     }
 }

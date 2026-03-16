@@ -6,8 +6,8 @@ use App\Core\Payments\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subscription extends Model
 {
@@ -21,7 +21,7 @@ class Subscription extends Model
 
     protected $casts = [
         'trial_ends_at' => 'datetime',
-        'end_date'   => 'datetime',
+        'end_date' => 'datetime',
     ];
 
     /*
@@ -69,8 +69,8 @@ class Subscription extends Model
         return $this->end_date !== null && now()->gt($this->end_date);
     }
 
-    public function expire() : void
+    public function expire(): void
     {
-        $this->update(['status'  => 'expired']);
+        $this->update(['status' => 'expired']);
     }
 }

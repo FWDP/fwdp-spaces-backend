@@ -36,6 +36,7 @@ class ProductController extends Controller
     public function destroy(int $productId): JsonResponse
     {
         $this->service->deleteProduct(Product::findOrFail($productId));
+
         return response()->json(['message' => 'Product deleted.']);
     }
 }

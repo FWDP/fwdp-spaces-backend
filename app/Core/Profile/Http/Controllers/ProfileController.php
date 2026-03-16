@@ -2,11 +2,10 @@
 
 namespace App\Core\Profile\Http\Controllers;
 
-use App\Core\Profile\Models\UserProfile;
 use App\Core\Profile\Services\ProfileService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -20,13 +19,12 @@ class ProfileController extends Controller
     public function update(
         Request $request,
         ProfileService $profileService
-    ): \Illuminate\Http\JsonResponse
-    {
+    ): JsonResponse {
         $data = $request->validate([
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'phone' => 'nullable|string',
-            'avatar_url' => 'nullable|url'
+            'avatar_url' => 'nullable|url',
         ]);
 
         return response()->json(
@@ -37,7 +35,7 @@ class ProfileController extends Controller
         );
     }
 
-    function uploadAvatar(Request $request, ProfileService $profileService)
+    public function uploadAvatar(Request $request, ProfileService $profileService)
     {
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -47,7 +45,7 @@ class ProfileController extends Controller
             'avatar' => $profileService->uploadAvatar(
                 $request->user(),
                 $request->file('avatar')
-            )
+            ),
         ]);
     }
 }

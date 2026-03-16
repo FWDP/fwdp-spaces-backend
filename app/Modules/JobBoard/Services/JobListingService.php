@@ -19,20 +19,20 @@ class JobListingService
             ->with('category', 'poster')
             ->orderByDesc('created_at');
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $term = $filters['search'];
             $query->where(function ($q) use ($term) {
                 $q->where('title', 'like', "%{$term}%")
-                  ->orWhere('description', 'like', "%{$term}%")
-                  ->orWhere('location', 'like', "%{$term}%");
+                    ->orWhere('description', 'like', "%{$term}%")
+                    ->orWhere('location', 'like', "%{$term}%");
             });
         }
 
-        if (!empty($filters['category_id'])) {
+        if (! empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }
 
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
 
@@ -58,24 +58,28 @@ class JobListingService
     public function create(User $poster, array $data): JobListing
     {
         $job = JobListing::create(array_merge($data, ['posted_by' => $poster->id]));
+
         return $job->refresh();
     }
 
     public function update(JobListing $job, array $data): JobListing
     {
         $job->update($data);
+
         return $job->fresh(['category']);
     }
 
     public function publish(JobListing $job): JobListing
     {
         $job->update(['status' => 'published']);
+
         return $job->fresh();
     }
 
     public function close(JobListing $job): JobListing
     {
         $job->update(['status' => 'closed']);
+
         return $job->fresh();
     }
 
@@ -92,12 +96,13 @@ class JobListingService
 
         if ($existing) {
             $existing->delete();
+
             return false; // unsaved
         }
 
         SavedJob::create([
-            'user_id'  => $user->id,
-            'job_id'   => $job->id,
+            'user_id' => $user->id,
+            'job_id' => $job->id,
             'saved_at' => now(),
         ]);
 

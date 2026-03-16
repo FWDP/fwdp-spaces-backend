@@ -9,6 +9,7 @@ use RuntimeException;
 class PayMongoGateway implements PaymentGateway
 {
     protected string $baseUrl = 'https://api.paymongo.com/v1';
+
     protected string $secretKey;
 
     public function __construct()
@@ -22,26 +23,26 @@ class PayMongoGateway implements PaymentGateway
             ->post("{$this->baseUrl}/payment_intents", [
                 'data' => [
                     'attributes' => [
-                        'amount'               => (int) round($data['amount'] * 100), // centavos
-                        'currency'             => $data['currency'] ?? 'PHP',
+                        'amount' => (int) round($data['amount'] * 100), // centavos
+                        'currency' => $data['currency'] ?? 'PHP',
                         'payment_method_allowed' => ['gcash', 'paymaya', 'card', 'dob', 'brankas', 'grab_pay', 'shopee_pay'],
-                        'description'          => $data['description'] ?? 'Subscription Payment',
-                        'capture_type'         => 'automatic',
+                        'description' => $data['description'] ?? 'Subscription Payment',
+                        'capture_type' => 'automatic',
                     ],
                 ],
             ]);
 
         if ($response->failed()) {
-            throw new RuntimeException('PayMongo createPayment failed: ' . $response->body());
+            throw new RuntimeException('PayMongo createPayment failed: '.$response->body());
         }
 
         $intent = $response->json('data');
 
         return [
             'reference' => $intent['id'],
-            'status'    => $this->mapStatus($intent['attributes']['status']),
+            'status' => $this->mapStatus($intent['attributes']['status']),
             'client_key' => $intent['attributes']['client_key'],
-            'raw'       => $intent,
+            'raw' => $intent,
         ];
     }
 
@@ -53,26 +54,26 @@ class PayMongoGateway implements PaymentGateway
             ->get("{$this->baseUrl}/payment_intents/{$id}");
 
         if ($response->failed()) {
-            throw new RuntimeException('PayMongo verifyPayment failed: ' . $response->body());
+            throw new RuntimeException('PayMongo verifyPayment failed: '.$response->body());
         }
 
         $intent = $response->json('data');
 
         return [
             'reference' => $intent['id'],
-            'status'    => $this->mapStatus($intent['attributes']['status']),
-            'raw'       => $intent,
+            'status' => $this->mapStatus($intent['attributes']['status']),
+            'raw' => $intent,
         ];
     }
 
     protected function mapStatus(string $paymongoStatus): string
     {
         return match ($paymongoStatus) {
-            'succeeded'        => 'success',
+            'succeeded' => 'success',
             'awaiting_payment_method',
             'awaiting_next_action' => 'pending',
-            'processing'       => 'processing',
-            default            => 'failed',
+            'processing' => 'processing',
+            default => 'failed',
         };
     }
 }

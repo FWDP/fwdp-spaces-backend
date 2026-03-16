@@ -11,7 +11,7 @@ class EnsureActiveSubscription
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -20,7 +20,7 @@ class EnsureActiveSubscription
             ->latest()
             ->first();
 
-        if (!$subscription || !$subscription->isActive()) {
+        if (! $subscription || ! $subscription->isActive()) {
             return response()->json(
                 ['message' => 'Active subscription required'],
                 Response::HTTP_FORBIDDEN

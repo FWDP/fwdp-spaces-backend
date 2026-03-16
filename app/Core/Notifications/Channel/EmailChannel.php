@@ -13,7 +13,7 @@ class EmailChannel
             'notification_id' => $notification->id,
             'channel' => 'email',
             'status' => 'sent',
-            'created_at' => now()
+            'created_at' => now(),
         ]);
     }
 }

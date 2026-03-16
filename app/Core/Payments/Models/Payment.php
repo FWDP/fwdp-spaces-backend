@@ -34,7 +34,7 @@ class Payment extends Model
         return $this->belongsTo(Subscription::class);
     }
 
-    public function isSuccessful() : bool
+    public function isSuccessful(): bool
     {
         return $this->status === 'success';
     }

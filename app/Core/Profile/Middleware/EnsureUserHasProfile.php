@@ -2,26 +2,28 @@
 
 namespace App\Core\Profile\Middleware;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserHasProfile
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, \Closure $next): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+    public function handle(Request $request, \Closure $next): JsonResponse|Response
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return \response()->json([
                 'message' => 'Unauthenticated.',
             ], 401);
         }
 
-        if (!$user->profile()->exists()) {
+        if (! $user->profile()->exists()) {
             return \response()->json([
                 'message' => 'Profile required. Please complete your profile.',
             ], 403);

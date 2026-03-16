@@ -25,12 +25,14 @@ class DealService
     public function updateDeal(Deal $deal, array $data): Deal
     {
         $deal->update($data);
+
         return $deal->fresh(['contact']);
     }
 
     public function updateStage(Deal $deal, string $stage): Deal
     {
         $deal->update(['stage' => $stage]);
+
         return $deal->fresh();
     }
 

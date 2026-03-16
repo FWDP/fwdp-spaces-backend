@@ -19,8 +19,7 @@ class PaymentService
     public function checkout(
         User $user,
         SubscriptionPlan $plan,
-    ): Payment
-    {
+    ): Payment {
         $subscription = $user->subscriptions()
             ->latest()
             ->first();
@@ -31,14 +30,14 @@ class PaymentService
         ]);
 
         $payment = Payment::create([
-            'user_id'            => $user->id,
-            'subscription_id'    => $subscription->id,
-            'amount'             => $plan->price,
-            'currency'           => 'PHP',
-            'status'             => $paymentIntent['status'],
-            'provider'           => 'paymongo',
+            'user_id' => $user->id,
+            'subscription_id' => $subscription->id,
+            'amount' => $plan->price,
+            'currency' => 'PHP',
+            'status' => $paymentIntent['status'],
+            'provider' => 'paymongo',
             'provider_reference' => $paymentIntent['reference'],
-            'metadata'           => [
+            'metadata' => [
                 'client_key' => $paymentIntent['client_key'] ?? null,
             ],
         ]);
@@ -46,8 +45,8 @@ class PaymentService
         // If payment already succeeded (e.g. test gateway), activate immediately
         if ($payment->isSuccessful()) {
             $subscription->update([
-                'plan_id'  => $plan->id,
-                'status'   => 'active',
+                'plan_id' => $plan->id,
+                'status' => 'active',
                 'end_date' => now()->addDays(30),
             ]);
         }

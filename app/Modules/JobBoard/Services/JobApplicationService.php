@@ -32,9 +32,9 @@ class JobApplicationService
         }
 
         return JobApplication::create(array_merge($data, [
-            'job_id'       => $job->id,
+            'job_id' => $job->id,
             'applicant_id' => $applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]));
     }
 
@@ -66,6 +66,7 @@ class JobApplicationService
     public function updateStatus(JobApplication $application, string $status): JobApplication
     {
         $application->update(['status' => $status]);
+
         return $application->fresh();
     }
 

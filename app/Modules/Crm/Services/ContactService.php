@@ -25,6 +25,7 @@ class ContactService
     public function updateContact(Contact $contact, array $data): Contact
     {
         $contact->update($data);
+
         return $contact->fresh();
     }
 

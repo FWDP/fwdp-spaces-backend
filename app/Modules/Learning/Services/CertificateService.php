@@ -11,7 +11,7 @@ class CertificateService
         return Certificate::query()->create([
             'user_id' => $userId,
             'course_id' => $courseId,
-            'certificate_url' => "/certificates/$userId-$courseId.pdf"
+            'certificate_url' => "/certificates/$userId-$courseId.pdf",
         ]);
     }
 }

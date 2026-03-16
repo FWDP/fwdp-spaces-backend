@@ -24,9 +24,13 @@ class AuthService
     {
         $user = User::where('email', $email)->first();
 
-        if(!$user) return null;
+        if (! $user) {
+            return null;
+        }
 
-        if(!\Hash::check($password, $user->password)) return null;
+        if (! \Hash::check($password, $user->password)) {
+            return null;
+        }
 
         return $user;
     }

@@ -36,6 +36,7 @@ class PurchaseOrderController extends Controller
     public function updateStatus(Request $request, int $purchaseOrderId): JsonResponse
     {
         $request->validate(['status' => 'required|in:draft,ordered,cancelled']);
+
         return response()->json($this->service->updateStatus(PurchaseOrder::findOrFail($purchaseOrderId), $request->input('status')));
     }
 }

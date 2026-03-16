@@ -8,7 +8,9 @@ class ModuleManifest
     {
         $manifestFiles = "$modulePath/manifest.json";
 
-        if (!file_exists($manifestFiles)) return null;
+        if (! file_exists($manifestFiles)) {
+            return null;
+        }
 
         return json_decode(
             file_get_contents($manifestFiles),

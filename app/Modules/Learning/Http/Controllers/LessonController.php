@@ -3,6 +3,7 @@
 namespace App\Modules\Learning\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Learning\Models\Lesson;
 use App\Modules\Learning\Models\LessonCompletion;
 use App\Modules\Learning\Services\ProgressService;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class LessonController extends Controller
 
     public function complete($lesson)
     {
-        $lessonId = $lesson instanceof \App\Modules\Learning\Models\Lesson ? $lesson->id : $lesson;
+        $lessonId = $lesson instanceof Lesson ? $lesson->id : $lesson;
         $user = Auth::user();
 
         $completion = LessonCompletion::query()->firstOrCreate([

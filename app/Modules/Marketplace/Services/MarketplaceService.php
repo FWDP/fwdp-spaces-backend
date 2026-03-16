@@ -16,11 +16,12 @@ class MarketplaceService
         return collect($discovered)->map(function (string $name) use ($installed) {
             $slug = strtolower($name);
             $record = $installed->get($slug);
+
             return [
-                'name'         => $name,
-                'slug'         => $slug,
-                'installed'    => (bool) $record,
-                'enabled'      => $record ? (bool) $record->enabled : false,
+                'name' => $name,
+                'slug' => $slug,
+                'installed' => (bool) $record,
+                'enabled' => $record ? (bool) $record->enabled : false,
                 'installed_at' => $record->installed_at ?? null,
             ];
         })->values()->toArray();
@@ -31,7 +32,7 @@ class MarketplaceService
         $slug = strtolower($name);
         $studly = $this->toStudly($name);
 
-        if (!$this->moduleExists($studly)) {
+        if (! $this->moduleExists($studly)) {
             abort(404, "Module [{$studly}] not found on filesystem.");
         }
 
@@ -49,7 +50,7 @@ class MarketplaceService
         $slug = strtolower($name);
         $record = DB::table('modules')->where('name', $slug)->first();
 
-        if (!$record) {
+        if (! $record) {
             abort(404, "Module [{$name}] is not installed.");
         }
 
@@ -63,21 +64,23 @@ class MarketplaceService
         $slug = strtolower($name);
         $record = DB::table('modules')->where('name', $slug)->first();
 
-        if (!$record) {
+        if (! $record) {
             abort(404, "Module [{$name}] is not installed.");
         }
 
-        $newState = !$record->enabled;
+        $newState = ! $record->enabled;
         DB::table('modules')->where('name', $slug)->update(['enabled' => $newState]);
 
-        return ['message' => "Module [{$name}] " . ($newState ? 'enabled' : 'disabled') . '.', 'enabled' => $newState];
+        return ['message' => "Module [{$name}] ".($newState ? 'enabled' : 'disabled').'.', 'enabled' => $newState];
     }
 
     protected function discoverModules(): array
     {
         $path = app_path('Modules');
 
-        if (!File::exists($path)) return [];
+        if (! File::exists($path)) {
+            return [];
+        }
 
         return collect(File::directories($path))
             ->map(fn ($dir) => basename($dir))

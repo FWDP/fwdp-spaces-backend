@@ -13,16 +13,15 @@ class AuditService
         ?string $entityType = null,
         ?string $entityId = null,
         array $metadata = []
-    ): AuditLog
-    {
+    ): AuditLog {
         return AuditLog::query()->create([
             'user_id' => $userId,
             'event' => $event,
             'entity_type' => $entityType,
             'entity_id' => $entityId,
             'metadata' => $metadata,
-            'ip_address'=> Request::ip(),
-            'user_agent'=> Request::userAgent(),
+            'ip_address' => Request::ip(),
+            'user_agent' => Request::userAgent(),
             'created_at' => now(),
         ]);
     }

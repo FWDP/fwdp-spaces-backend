@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 class ExpireSubscriptions extends Command
 {
     protected $signature = 'subscriptions:expire';
+
     protected $description = 'Expire subscriptions when End Date approach.';
 
     /**
@@ -20,8 +21,7 @@ class ExpireSubscriptions extends Command
             ->where('subscriptions.status', '=', 'active')
             ->whereNotNull('subscriptions.end_date')
             ->whereDate('subscriptions.end_date', '<', now())
-            ->update(['status'  => 'expired']);
-        ;
+            ->update(['status' => 'expired']);
 
         $this->info('Subscription expired');
 

@@ -25,6 +25,7 @@ class ActivityController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
+
         return response()->json($this->service->createActivity($data), 201);
     }
 
@@ -36,6 +37,7 @@ class ActivityController extends Controller
     public function destroy(int $activityId): JsonResponse
     {
         $this->service->deleteActivity(Activity::findOrFail($activityId));
+
         return response()->json(['message' => 'Activity deleted.']);
     }
 }

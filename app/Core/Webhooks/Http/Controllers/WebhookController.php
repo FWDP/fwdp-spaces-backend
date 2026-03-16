@@ -36,7 +36,7 @@ class WebhookController extends Controller
         $webhook->delete();
 
         return response()->json([
-            'message' => 'Webhook deleted'
+            'message' => 'Webhook deleted',
         ]);
     }
 }

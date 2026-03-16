@@ -11,7 +11,9 @@ class QuizService
         foreach ($quiz->questions as $question) {
             if (isset($answers[$question->id]) &&
                 $answers[$question->id] == $question->correct_answer
-            ) $score++;
+            ) {
+                $score++;
+            }
         }
 
         return $score;

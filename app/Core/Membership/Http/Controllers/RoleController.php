@@ -17,13 +17,13 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
-       return response()->json(
-           Role::query()->create([
-               'name' => $request->name,
-               'slug' => $request->slug,
-           ]),
-           Response::HTTP_CREATED
-       );
+        return response()->json(
+            Role::query()->create([
+                'name' => $request->name,
+                'slug' => $request->slug,
+            ]),
+            Response::HTTP_CREATED
+        );
     }
 
     public function show(Role $role)
@@ -41,6 +41,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
+
         return response()->json('Role deleted', Response::HTTP_OK);
     }
 

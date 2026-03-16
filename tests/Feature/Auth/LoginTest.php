@@ -4,6 +4,8 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
+use Laravel\Passport\Client;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -13,52 +15,52 @@ class LoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        \Laravel\Passport\Client::forceCreate([
-            'name'          => 'Test Personal Access Client',
-            'secret'        => \Illuminate\Support\Str::random(40),
+        Client::forceCreate([
+            'name' => 'Test Personal Access Client',
+            'secret' => Str::random(40),
             'redirect_uris' => [],
-            'grant_types'   => ['personal_access', 'refresh_token'],
-            'revoked'       => false,
-            'provider'      => 'users',
+            'grant_types' => ['personal_access', 'refresh_token'],
+            'revoked' => false,
+            'provider' => 'users',
         ]);
     }
 
     public function test_user_can_login_with_correct_credentials(): void
     {
         $user = User::factory()->create([
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => \Hash::make('Password123!'),
         ]);
 
         $response = $this->postJson('/api/auth/login', [
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => 'Password123!',
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonStructure(['user', 'token']);
+            ->assertJsonStructure(['user', 'token']);
     }
 
     public function test_login_fails_with_wrong_password(): void
     {
         User::factory()->create([
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => \Hash::make('Password123!'),
         ]);
 
         $response = $this->postJson('/api/auth/login', [
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => 'WrongPassword!',
         ]);
 
         $response->assertStatus(401)
-                 ->assertJson(['message' => 'Unauthorized. Invalid credentials.']);
+            ->assertJson(['message' => 'Unauthorized. Invalid credentials.']);
     }
 
     public function test_login_fails_with_nonexistent_email(): void
     {
         $response = $this->postJson('/api/auth/login', [
-            'email'    => 'nobody@example.com',
+            'email' => 'nobody@example.com',
             'password' => 'Password123!',
         ]);
 
@@ -72,7 +74,7 @@ class LoginTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['email']);
+            ->assertJsonValidationErrors(['email']);
     }
 
     public function test_login_fails_with_missing_password(): void
@@ -82,29 +84,29 @@ class LoginTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['password']);
+            ->assertJsonValidationErrors(['password']);
     }
 
     public function test_login_fails_with_invalid_email_format(): void
     {
         $response = $this->postJson('/api/auth/login', [
-            'email'    => 'not-valid',
+            'email' => 'not-valid',
             'password' => 'Password123!',
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['email']);
+            ->assertJsonValidationErrors(['email']);
     }
 
     public function test_login_returns_token(): void
     {
         User::factory()->create([
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => \Hash::make('Password123!'),
         ]);
 
         $response = $this->postJson('/api/auth/login', [
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => 'Password123!',
         ]);
 

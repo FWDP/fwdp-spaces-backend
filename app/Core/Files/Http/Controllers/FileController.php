@@ -19,7 +19,7 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:10240'
+            'file' => 'required|file|max:10240',
         ]);
 
         return response()->json([
@@ -40,6 +40,7 @@ class FileController extends Controller
     public function destroy(File $file)
     {
         $this->fileService->delete($file);
+
         return response()->json(['message' => 'File deleted']);
     }
 }

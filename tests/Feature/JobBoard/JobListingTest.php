@@ -5,8 +5,10 @@ namespace Tests\Feature\JobBoard;
 use App\Models\User;
 use App\Modules\JobBoard\Models\JobCategory;
 use App\Modules\JobBoard\Models\JobListing;
+use App\Modules\JobBoard\Models\SavedJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Laravel\Passport\Client;
 use Tests\TestCase;
 
 class JobListingTest extends TestCase
@@ -14,33 +16,34 @@ class JobListingTest extends TestCase
     use RefreshDatabase;
 
     protected User $employer;
+
     protected User $applicant;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        \Laravel\Passport\Client::forceCreate([
-            'name'          => 'Test Personal Access Client',
-            'secret'        => Str::random(40),
+        Client::forceCreate([
+            'name' => 'Test Personal Access Client',
+            'secret' => Str::random(40),
             'redirect_uris' => [],
-            'grant_types'   => ['personal_access', 'refresh_token'],
-            'revoked'       => false,
-            'provider'      => 'users',
+            'grant_types' => ['personal_access', 'refresh_token'],
+            'revoked' => false,
+            'provider' => 'users',
         ]);
 
-        $this->employer  = User::factory()->create();
+        $this->employer = User::factory()->create();
         $this->applicant = User::factory()->create();
     }
 
     private function makeJob(array $overrides = []): JobListing
     {
         return JobListing::create(array_merge([
-            'posted_by'   => $this->employer->id,
-            'title'       => 'Software Engineer',
+            'posted_by' => $this->employer->id,
+            'title' => 'Software Engineer',
             'description' => 'Build great things.',
-            'type'        => 'full_time',
-            'status'      => 'published',
+            'type' => 'full_time',
+            'status' => 'published',
         ], $overrides));
     }
 
@@ -129,9 +132,9 @@ class JobListingTest extends TestCase
     {
         $this->actingAs($this->employer, 'api')
             ->postJson('/api/job-board/jobs', [
-                'title'       => 'Backend Dev',
+                'title' => 'Backend Dev',
                 'description' => 'Write APIs.',
-                'type'        => 'full_time',
+                'type' => 'full_time',
             ])
             ->assertCreated()
             ->assertJsonPath('title', 'Backend Dev')
@@ -150,11 +153,11 @@ class JobListingTest extends TestCase
     {
         $this->actingAs($this->employer, 'api')
             ->postJson('/api/job-board/jobs', [
-                'title'       => 'Job',
+                'title' => 'Job',
                 'description' => 'Desc',
-                'type'        => 'full_time',
-                'salary_min'  => 50000,
-                'salary_max'  => 10000,
+                'type' => 'full_time',
+                'salary_min' => 50000,
+                'salary_max' => 10000,
             ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['salary_max']);
@@ -164,10 +167,10 @@ class JobListingTest extends TestCase
     {
         $this->actingAs($this->employer, 'api')
             ->postJson('/api/job-board/jobs', [
-                'title'       => 'Job',
+                'title' => 'Job',
                 'description' => 'Desc',
-                'type'        => 'full_time',
-                'deadline'    => now()->subDay()->toDateString(),
+                'type' => 'full_time',
+                'deadline' => now()->subDay()->toDateString(),
             ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['deadline']);
@@ -176,9 +179,9 @@ class JobListingTest extends TestCase
     public function test_unauthenticated_cannot_create_job(): void
     {
         $this->postJson('/api/job-board/jobs', [
-            'title'       => 'Backend Dev',
+            'title' => 'Backend Dev',
             'description' => 'Write APIs.',
-            'type'        => 'full_time',
+            'type' => 'full_time',
         ])->assertUnauthorized();
     }
 
@@ -195,7 +198,7 @@ class JobListingTest extends TestCase
     public function test_employer_cannot_update_another_employers_job(): void
     {
         $other = User::factory()->create();
-        $job   = $this->makeJob(['posted_by' => $other->id]);
+        $job = $this->makeJob(['posted_by' => $other->id]);
 
         $this->actingAs($this->employer, 'api')
             ->putJson("/api/job-board/jobs/{$job->id}", ['title' => 'Hacked'])
@@ -259,16 +262,16 @@ class JobListingTest extends TestCase
 
         $this->assertDatabaseHas('saved_jobs', [
             'user_id' => $this->applicant->id,
-            'job_id'  => $job->id,
+            'job_id' => $job->id,
         ]);
     }
 
     public function test_user_can_unsave_a_saved_job(): void
     {
         $job = $this->makeJob();
-        \App\Modules\JobBoard\Models\SavedJob::create([
+        SavedJob::create([
             'user_id' => $this->applicant->id,
-            'job_id'  => $job->id,
+            'job_id' => $job->id,
             'saved_at' => now(),
         ]);
 
@@ -279,7 +282,7 @@ class JobListingTest extends TestCase
 
         $this->assertDatabaseMissing('saved_jobs', [
             'user_id' => $this->applicant->id,
-            'job_id'  => $job->id,
+            'job_id' => $job->id,
         ]);
     }
 
@@ -288,8 +291,8 @@ class JobListingTest extends TestCase
         $job1 = $this->makeJob(['title' => 'Job A']);
         $job2 = $this->makeJob(['title' => 'Job B']);
 
-        \App\Modules\JobBoard\Models\SavedJob::create(['user_id' => $this->applicant->id, 'job_id' => $job1->id, 'saved_at' => now()]);
-        \App\Modules\JobBoard\Models\SavedJob::create(['user_id' => $this->applicant->id, 'job_id' => $job2->id, 'saved_at' => now()]);
+        SavedJob::create(['user_id' => $this->applicant->id, 'job_id' => $job1->id, 'saved_at' => now()]);
+        SavedJob::create(['user_id' => $this->applicant->id, 'job_id' => $job2->id, 'saved_at' => now()]);
 
         $this->actingAs($this->applicant, 'api')
             ->getJson('/api/job-board/saved-jobs')

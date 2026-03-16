@@ -23,14 +23,16 @@ class Notification extends Model
     ];
 
     protected $casts = [
-      'data' => 'array',
-      'is_read' => 'boolean',
+        'data' => 'array',
+        'is_read' => 'boolean',
     ];
 
     protected static function booted(): void
     {
         static::creating(function ($notification) {
-           if (!$notification->uuid) $notification->uuid = (string) Str::uuid();
+            if (! $notification->uuid) {
+                $notification->uuid = (string) Str::uuid();
+            }
         });
     }
 

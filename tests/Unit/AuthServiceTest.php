@@ -16,7 +16,7 @@ class AuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new AuthService();
+        $this->service = new AuthService;
     }
 
     public function test_register_creates_and_returns_user(): void
@@ -24,8 +24,8 @@ class AuthServiceTest extends TestCase
         \Event::fake();
 
         $user = $this->service->register([
-            'name'     => 'Peter Brion',
-            'email'    => 'peter@example.com',
+            'name' => 'Peter Brion',
+            'email' => 'peter@example.com',
             'password' => 'Password123!',
         ]);
 
@@ -37,7 +37,7 @@ class AuthServiceTest extends TestCase
     public function test_attempt_login_returns_user_with_correct_credentials(): void
     {
         User::factory()->create([
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => \Hash::make('Password123!'),
         ]);
 
@@ -49,7 +49,7 @@ class AuthServiceTest extends TestCase
     public function test_attempt_login_returns_null_with_wrong_password(): void
     {
         User::factory()->create([
-            'email'    => 'peter@example.com',
+            'email' => 'peter@example.com',
             'password' => \Hash::make('Password123!'),
         ]);
 

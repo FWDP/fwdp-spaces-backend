@@ -12,11 +12,14 @@ class ProfileService
     {
         return $user->profile;
     }
+
     public function updateProfile(User $user, array $data): UserProfile
     {
         $profile = $this->getProfile($user);
 
-        if (!$profile) $profile = UserProfile::create(['user_id' => $user->id]);
+        if (! $profile) {
+            $profile = UserProfile::create(['user_id' => $user->id]);
+        }
 
         $profile->update([
             'first_name' => $data['first_name'] ?? $profile->first_name,
@@ -33,9 +36,13 @@ class ProfileService
     {
         $profile = $this->getProfile($user);
 
-        if (!$profile) $profile = UserProfile::create(['user_id' => $user->id]);
+        if (! $profile) {
+            $profile = UserProfile::create(['user_id' => $user->id]);
+        }
 
-        if ($profile->avatar_path) Storage::disk('public')->delete($profile->avatar_path);
+        if ($profile->avatar_path) {
+            Storage::disk('public')->delete($profile->avatar_path);
+        }
 
         $profile->update([
             'avatar_path' => $file->store("avatars/{$user->id}", 'public'),

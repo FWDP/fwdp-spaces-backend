@@ -20,7 +20,9 @@ class ModuleLoader
     {
         $modulesPath = app_path('Modules');
 
-        if (!File::exists($modulesPath)) return [];
+        if (! File::exists($modulesPath)) {
+            return [];
+        }
 
         return collect(File::directories($modulesPath))
             ->map(fn ($path) => basename($path))

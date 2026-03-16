@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Core\Support\Modules\ModuleRecord;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
@@ -30,14 +29,14 @@ class ModuleInstall extends Command
      */
     public function handle(): int
     {
-       ModuleRecord::query()
-           ->create(
-               [
-                   'name' => Str::lower($this->argument('module')),
-                   'enabled' => true,
-                   'installed_at' => now(),
-               ]
-           );
+        ModuleRecord::query()
+            ->create(
+                [
+                    'name' => Str::lower($this->argument('module')),
+                    'enabled' => true,
+                    'installed_at' => now(),
+                ]
+            );
 
         $this->info("Module [{$this->argument('module')}] successfully installed.");
 
@@ -45,8 +44,7 @@ class ModuleInstall extends Command
 
         $studly = Str::studly(Str::lower($this->argument('module')));
 
-        if (is_dir(app_path("Modules/{$studly}/database/migrations")))
-        {
+        if (is_dir(app_path("Modules/{$studly}/database/migrations"))) {
             Artisan::call('migrate', [
                 '--path' => "app/Modules/{$studly}/database/migrations",
                 '--force' => true,
@@ -56,7 +54,7 @@ class ModuleInstall extends Command
 
             $this->info("Migration for module [{$studly}] successfully executed.");
         } else {
-            $this->info("No module-specific migrations found. ");
+            $this->info('No module-specific migrations found. ');
         }
 
         return CommandAlias::SUCCESS;
@@ -72,6 +70,7 @@ class ModuleInstall extends Command
 
         if (str_contains(file_get_contents($providerFile), $providerLine)) {
             $this->line("Provider already registered: {$providerLine}");
+
             return;
         }
 

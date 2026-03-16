@@ -26,6 +26,7 @@ class ProductService
     public function updateProduct(Product $product, array $data): Product
     {
         $product->update($data);
+
         return $product->fresh(['category', 'supplier', 'unit']);
     }
 

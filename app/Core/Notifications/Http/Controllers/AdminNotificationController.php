@@ -33,7 +33,7 @@ class AdminNotificationController extends Controller
         });
 
         return response()->json([
-            'message' => 'Notification has been sent.'
+            'message' => 'Notification has been sent.',
         ]);
     }
 }

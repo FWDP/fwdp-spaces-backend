@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('price', 10, 2)->default(0);
             $table->integer('trial_days')->default(0);
             $table->boolean('is_active')->default(true);
-            $table->json("features")->nullable();
+            $table->json('features')->nullable();
             $table->timestamps();
         });
     }

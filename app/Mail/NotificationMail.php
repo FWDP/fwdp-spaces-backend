@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class NotificationMail extends Mailable
@@ -20,8 +17,7 @@ class NotificationMail extends Mailable
         public string $title,
         public string $body,
         public array $data = [],
-    )
-    {
+    ) {
         //
     }
 
@@ -32,7 +28,7 @@ class NotificationMail extends Mailable
             ->with([
                 'title' => $this->title,
                 'message' => $this->body,
-                'data' => $this->data
+                'data' => $this->data,
             ]);
     }
 }

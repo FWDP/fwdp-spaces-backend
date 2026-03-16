@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\PseudoTypes\LowercaseString;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class ModuleMake extends Command
@@ -36,6 +34,7 @@ class ModuleMake extends Command
 
         if (File::exists($basePath)) {
             $this->error("Module {$name} already exists!");
+
             return CommandAlias::FAILURE;
         }
 
@@ -58,7 +57,7 @@ class ModuleMake extends Command
 
         // Create api.php to routes folder
         File::put("$basePath/routes/api.php",
-            contents: $this->generateRoutes()) ;
+            contents: $this->generateRoutes());
 
         // Create Service Provider
         $providerContent = $this->generateServiceProvider($name);
@@ -67,7 +66,7 @@ class ModuleMake extends Command
             contents: $providerContent);
 
         $this->info("Module {$name} module created successfully.");
-        $this->info("Remember to register the provider in bootstrap/providers.php");
+        $this->info('Remember to register the provider in bootstrap/providers.php');
 
         return CommandAlias::SUCCESS;
     }

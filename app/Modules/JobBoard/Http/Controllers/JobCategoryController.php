@@ -18,7 +18,7 @@ class JobCategoryController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255|unique:job_categories',
+            'name' => 'required|string|max:255|unique:job_categories',
             'description' => 'nullable|string',
         ]);
 
@@ -32,7 +32,7 @@ class JobCategoryController extends Controller
         $category = JobCategory::findOrFail($categoryId);
 
         $data = $request->validate([
-            'name'        => 'sometimes|string|max:255|unique:job_categories,name,' . $category->id,
+            'name' => 'sometimes|string|max:255|unique:job_categories,name,'.$category->id,
             'description' => 'nullable|string',
         ]);
 

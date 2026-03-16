@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     protected AuthService $authService;
+
     protected PassportService $passportService;
 
     public function __construct(
@@ -23,8 +24,7 @@ class AuthController extends Controller
 
     public function register(
         Request $request
-    )
-    {
+    ) {
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
@@ -43,11 +43,10 @@ class AuthController extends Controller
      */
     public function login(
         Request $request,
-    )
-    {
+    ) {
         $credentials = $request->validate([
             'email' => 'required|string|email|max:255',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ]);
 
         $user = $this->authService->attemptLogin(
@@ -55,7 +54,9 @@ class AuthController extends Controller
             $credentials['password']
         );
 
-        if (!$user) return response()->json(['message' => 'Unauthorized. Invalid credentials.'], 401);
+        if (! $user) {
+            return response()->json(['message' => 'Unauthorized. Invalid credentials.'], 401);
+        }
 
         return response()->json([
             'user' => $user,
@@ -68,8 +69,7 @@ class AuthController extends Controller
         $this->passportService->revokeCurrentToken($request->user());
 
         return response()->json([
-            'message' => 'You have been successfully logged out!'
+            'message' => 'You have been successfully logged out!',
         ]);
     }
-
 }

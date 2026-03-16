@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Core\Support\ModuleRegistry;
 use App\Core\Support\Modules\ModuleRecord;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
@@ -44,35 +42,35 @@ class ModuleDisable extends Command
 
         return CommandAlias::SUCCESS;
     }
+
     public function removeProviderFromBootstrap(string $slug): void
     {
         $studly = Str::studly($slug);
 
         $providerLine = match (true) {
-            is_dir(app_path("Modules/{$studly}/Providers"))
-            =>"App\\Modules\\{$studly}\\Providers\\{$studly}ServiceProvider::class",
+            is_dir(app_path("Modules/{$studly}/Providers")) => "App\\Modules\\{$studly}\\Providers\\{$studly}ServiceProvider::class",
             default => null
         };
 
-        if (!$providerLine){
+        if (! $providerLine) {
             $this->warn("No matching ServiceProvider found for [{$studly}] - skipping.");
         }
 
-        if (!"bootstrap/providers.php"
+        if (! 'bootstrap/providers.php'
                 |> base_path(...)
                 |> file_get_contents(...)
-                |> (fn($x) => Str::contains($x, $providerLine))) {
-            $this->info("Provider not present - nothing to remove.");
+                |> (fn ($x) => Str::contains($x, $providerLine))) {
+            $this->info('Provider not present - nothing to remove.');
         } else {
-            $escapeProvider = preg_quote($providerLine, "/");
+            $escapeProvider = preg_quote($providerLine, '/');
 
-            $contents = "bootstrap/providers.php"
+            $contents = 'bootstrap/providers.php'
                     |> base_path(...)
                     |> file_get_contents(...)
-                    |> (fn($x) => preg_replace("/\s*{$escapeProvider}\s*,?\s*\n/", "", $x));
+                    |> (fn ($x) => preg_replace("/\s*{$escapeProvider}\s*,?\s*\n/", '', $x));
 
             file_put_contents(base_path(
-                "bootstrap/providers.php"),
+                'bootstrap/providers.php'),
                 preg_replace(
                     "/(App\\\\[^n]+ServiceProvider::class),\s*];$/m",
                     "$1\n];",

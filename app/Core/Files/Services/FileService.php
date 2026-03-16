@@ -12,8 +12,7 @@ class FileService
         UploadedFile $file,
         string $disk = 'public',
         ?int $user_id = null
-    ): File
-    {
+    ): File {
         return File::query()->create([
             'disk' => $disk,
             'path' => $file->store('', $disk),

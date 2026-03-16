@@ -3,6 +3,7 @@
 namespace App\Modules\Learning\Services;
 
 use App\Modules\Learning\Models\Enrollment;
+use Illuminate\Database\Eloquent\Collection;
 
 class EnrollmentService
 {
@@ -22,7 +23,7 @@ class EnrollmentService
             ->delete();
     }
 
-    public function userEnrollments(int $userId): \Illuminate\Database\Eloquent\Collection
+    public function userEnrollments(int $userId): Collection
     {
         return Enrollment::query()
             ->with('course')

@@ -30,7 +30,7 @@ class UserProfile extends Model
     public function getAvatarUrlAttribute(): ?string
     {
         if ($this->avatar_path) {
-            return asset('storage/' . $this->avatar_path);
+            return asset('storage/'.$this->avatar_path);
         }
 
         return $this->attributes['avatar_url'] ?? null;

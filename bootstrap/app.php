@@ -1,6 +1,10 @@
 <?php
 
+use App\Core\Auth\Http\Middleware\EnsurePassportReady;
+use App\Core\Auth\Http\Middleware\EnsureRole;
 use App\Core\Membership\Http\Middleware\EnsureUserHasPermission;
+use App\Core\Subscriptions\Http\Middleware\EnsureActiveSubscription;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,13 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             // AUTH
-            'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth' => Authenticate::class,
             'permission' => EnsureUserHasPermission::class,
-            'passport.ready' => \App\Core\Auth\Http\Middleware\EnsurePassportReady::class,
+            'passport.ready' => EnsurePassportReady::class,
 
             // CUSTOM
-            'role' => \App\Core\Auth\Http\Middleware\EnsureRole::class,
-            'subscription.active' => \App\Core\Subscriptions\Http\Middleware\EnsureActiveSubscription::class,
+            'role' => EnsureRole::class,
+            'subscription.active' => EnsureActiveSubscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

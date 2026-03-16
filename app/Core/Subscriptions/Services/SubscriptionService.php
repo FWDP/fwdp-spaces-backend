@@ -12,16 +12,18 @@ class SubscriptionService
     {
         $plan = SubscriptionPlan::where('code', 'FREE')->first();
 
-        if (!$plan) return null;
+        if (! $plan) {
+            return null;
+        }
 
         $trialEndsAt = now()->addDays($plan->trial_days ?? 14);
 
         return Subscription::create([
-            'user_id'       => $user->id,
-            'plan_id'       => $plan->id,
-            'status'        => 'trial',
+            'user_id' => $user->id,
+            'plan_id' => $plan->id,
+            'status' => 'trial',
             'trial_ends_at' => $trialEndsAt,
-            'end_date'      => $trialEndsAt,
+            'end_date' => $trialEndsAt,
         ]);
     }
 

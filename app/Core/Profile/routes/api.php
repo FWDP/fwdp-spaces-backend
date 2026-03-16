@@ -5,19 +5,19 @@ use App\Core\Profile\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('api')->group(function () {
-     Route::prefix('profile')->middleware(['auth:api'])->group(function () {
-         Route::get('/', [ProfileController::class, 'show']);
-         Route::post('/', [ProfileController::class, 'update']);
-         Route::post('/avatar', [ProfileController::class, 'uploadAvatar']);
-     });
+    Route::prefix('profile')->middleware(['auth:api'])->group(function () {
+        Route::get('/', [ProfileController::class, 'show']);
+        Route::post('/', [ProfileController::class, 'update']);
+        Route::post('/avatar', [ProfileController::class, 'uploadAvatar']);
+    });
 
-     Route::prefix('admin')->middleware([
-         'auth:api',
-         'role:ADMIN'
-     ])->group(function () {
-         Route::prefix('profiles')->group(function () {
-             Route::get('/', [AdminProfileController::class, 'index']);
-             Route::get('/{id}', [AdminProfileController::class, 'show']);
-         });
-     });
- });
+    Route::prefix('admin')->middleware([
+        'auth:api',
+        'role:ADMIN',
+    ])->group(function () {
+        Route::prefix('profiles')->group(function () {
+            Route::get('/', [AdminProfileController::class, 'index']);
+            Route::get('/{id}', [AdminProfileController::class, 'show']);
+        });
+    });
+});

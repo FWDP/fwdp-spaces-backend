@@ -19,7 +19,7 @@ class ProfileServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new ProfileService();
+        $this->service = new ProfileService;
     }
 
     public function test_get_profile_returns_null_when_no_profile_exists(): void
@@ -66,9 +66,9 @@ class ProfileServiceTest extends TestCase
     {
         $user = User::factory()->create();
         UserProfile::create([
-            'user_id'    => $user->id,
+            'user_id' => $user->id,
             'first_name' => 'Peter',
-            'last_name'  => 'Brion',
+            'last_name' => 'Brion',
         ]);
 
         $profile = $this->service->updateProfile($user, ['first_name' => 'PJ']);

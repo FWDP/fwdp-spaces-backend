@@ -2,9 +2,9 @@
 
 namespace App\Core\Settings\Http\Controllers;
 
+use App\Core\Settings\Models\Setting;
 use App\Core\Settings\Services\SettingsService;
 use App\Http\Controllers\Controller;
-use App\Core\Settings\Models\Setting;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -24,8 +24,8 @@ class SettingController extends Controller
     public function show(string $key)
     {
         return response()->json([
-           'key' => $key,
-           'value' => $this->settingsService->get($key)
+            'key' => $key,
+            'value' => $this->settingsService->get($key),
         ]);
     }
 
@@ -36,7 +36,7 @@ class SettingController extends Controller
         $this->settingsService->set($key, $value);
 
         return response()->json([
-            'message' => 'Setting updated'
+            'message' => 'Setting updated',
         ]);
     }
 }

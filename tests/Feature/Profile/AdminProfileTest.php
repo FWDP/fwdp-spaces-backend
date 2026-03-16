@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Models\User;
 use App\Core\Profile\Models\UserProfile;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -26,7 +26,7 @@ class AdminProfileTest extends TestCase
         $response = $this->getJson('/api/admin/profiles');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure(['data', 'total', 'per_page']);
+            ->assertJsonStructure(['data', 'total', 'per_page']);
     }
 
     public function test_non_admin_cannot_access_admin_profiles(): void
@@ -80,16 +80,16 @@ class AdminProfileTest extends TestCase
         $admin = $this->makeAdmin();
         $user = User::factory()->create();
         UserProfile::create([
-            'user_id'    => $user->id,
+            'user_id' => $user->id,
             'first_name' => 'Peter',
-            'last_name'  => 'Brion',
+            'last_name' => 'Brion',
         ]);
         Passport::actingAs($admin);
 
         $response = $this->getJson("/api/admin/profiles/{$user->id}");
 
         $response->assertStatus(200)
-                 ->assertJsonFragment(['first_name' => 'Peter']);
+            ->assertJsonFragment(['first_name' => 'Peter']);
     }
 
     public function test_admin_show_returns_404_for_nonexistent_user(): void

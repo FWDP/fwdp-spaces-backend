@@ -37,12 +37,14 @@ class DealController extends Controller
     public function updateStage(Request $request, int $dealId): JsonResponse
     {
         $request->validate(['stage' => 'required|in:new,qualified,proposal,negotiation,won,lost']);
+
         return response()->json($this->service->updateStage(Deal::findOrFail($dealId), $request->input('stage')));
     }
 
     public function destroy(int $dealId): JsonResponse
     {
         $this->service->deleteDeal(Deal::findOrFail($dealId));
+
         return response()->json(['message' => 'Deal deleted.']);
     }
 }

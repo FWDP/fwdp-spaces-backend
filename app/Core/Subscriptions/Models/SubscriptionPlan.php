@@ -18,7 +18,7 @@ class SubscriptionPlan extends Model
     ];
 
     protected $casts = [
-      'features' => 'array',
+        'features' => 'array',
     ];
 
     public function subscriptions(): HasMany

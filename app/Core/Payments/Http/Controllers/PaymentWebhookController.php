@@ -11,18 +11,18 @@ class PaymentWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        if (!$this->verifySignature($request)) {
+        if (! $this->verifySignature($request)) {
             return response()->json(['message' => 'Invalid signature.'], 401);
         }
 
-        $event   = $request->input('data.attributes.type');
+        $event = $request->input('data.attributes.type');
         $payload = $request->input('data.attributes.data.attributes', []);
-        $id      = $request->input('data.attributes.data.id');
+        $id = $request->input('data.attributes.data.id');
 
         match ($event) {
-            'payment.paid'   => $this->handlePaymentPaid($id, $payload),
+            'payment.paid' => $this->handlePaymentPaid($id, $payload),
             'payment.failed' => $this->handlePaymentFailed($id, $payload),
-            default          => Log::info("PayMongo unhandled event: {$event}"),
+            default => Log::info("PayMongo unhandled event: {$event}"),
         };
 
         return response()->json(['message' => 'Webhook processed.']);
@@ -36,15 +36,16 @@ class PaymentWebhookController extends Controller
 
         $payment = Payment::where('provider_reference', $intentId)->first();
 
-        if (!$payment) {
+        if (! $payment) {
             Log::warning("PayMongo webhook: payment not found for intent {$intentId}");
+
             return;
         }
 
         $payment->update(['status' => 'success']);
 
         $payment->subscription?->update([
-            'status'   => 'active',
+            'status' => 'active',
             'end_date' => now()->addDays(30),
         ]);
     }
@@ -55,8 +56,9 @@ class PaymentWebhookController extends Controller
 
         $payment = Payment::where('provider_reference', $intentId)->first();
 
-        if (!$payment) {
+        if (! $payment) {
             Log::warning("PayMongo webhook: payment not found for intent {$intentId}");
+
             return;
         }
 
@@ -67,26 +69,31 @@ class PaymentWebhookController extends Controller
     {
         $webhookSecret = config('payments.paymongo.webhook_secret');
 
-        if (!$webhookSecret) return true; // skip in local/testing
+        if (! $webhookSecret) {
+            return true;
+        } // skip in local/testing
 
         $signature = $request->header('Paymongo-Signature');
 
-        if (!$signature) return false;
+        if (! $signature) {
+            return false;
+        }
 
         // PayMongo signature format: t=timestamp,te=test_hash,li=live_hash
         $parts = collect(explode(',', $signature))
             ->mapWithKeys(function ($part) {
                 [$key, $value] = explode('=', $part, 2);
+
                 return [$key => $value];
             });
 
         $timestamp = $parts->get('t');
-        $payload   = $timestamp . '.' . $request->getContent();
-        $expected  = hash_hmac('sha256', $payload, $webhookSecret);
+        $payload = $timestamp.'.'.$request->getContent();
+        $expected = hash_hmac('sha256', $payload, $webhookSecret);
 
         // Use 'li' for live mode, 'te' for test mode
-        $isLive    = str_starts_with(config('payments.paymongo.secret_key', ''), 'sk_live');
-        $received  = $parts->get($isLive ? 'li' : 'te', '');
+        $isLive = str_starts_with(config('payments.paymongo.secret_key', ''), 'sk_live');
+        $received = $parts->get($isLive ? 'li' : 'te', '');
 
         return hash_equals($expected, $received);
     }

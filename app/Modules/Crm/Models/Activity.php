@@ -16,8 +16,8 @@ class Activity extends Model
     ];
 
     protected $casts = [
-        'scheduled_at'  => 'datetime',
-        'completed_at'  => 'datetime',
+        'scheduled_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     public function contact(): BelongsTo

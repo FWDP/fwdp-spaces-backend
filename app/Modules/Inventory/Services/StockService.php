@@ -18,12 +18,12 @@ class StockService
             ->where('warehouse_id', $warehouse->id)
             ->first();
 
-        if (!$stock) {
-            $stock = new StockLevel();
-            $stock->product_id  = $product->id;
+        if (! $stock) {
+            $stock = new StockLevel;
+            $stock->product_id = $product->id;
             $stock->warehouse_id = $warehouse->id;
-            $stock->quantity    = 0;
-            $stock->reserved    = 0;
+            $stock->quantity = 0;
+            $stock->reserved = 0;
             $stock->save();
         }
 
@@ -36,19 +36,19 @@ class StockService
             $stock = $this->getStockLevel($product, $warehouse);
 
             match ($type) {
-                'in'         => $stock->increment('quantity', $quantity),
-                'out'        => $stock->decrement('quantity', $quantity),
+                'in' => $stock->increment('quantity', $quantity),
+                'out' => $stock->decrement('quantity', $quantity),
                 'adjustment' => $stock->update(['quantity' => $quantity]),
-                default      => null,
+                default => null,
             };
 
             return StockMovement::query()->create([
-                'product_id'   => $product->id,
+                'product_id' => $product->id,
                 'warehouse_id' => $warehouse->id,
-                'user_id'      => $userId,
-                'type'         => $type,
-                'quantity'     => $quantity,
-                'note'         => $note,
+                'user_id' => $userId,
+                'type' => $type,
+                'quantity' => $quantity,
+                'note' => $note,
             ]);
         });
     }

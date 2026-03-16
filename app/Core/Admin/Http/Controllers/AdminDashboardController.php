@@ -6,7 +6,6 @@ use App\Core\Payments\Models\Payment;
 use App\Core\Subscriptions\Models\Subscription;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {

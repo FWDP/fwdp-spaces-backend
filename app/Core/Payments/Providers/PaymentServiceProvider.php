@@ -13,14 +13,14 @@ class PaymentServiceProvider extends ServiceProvider
     {
         $this->app->bind(PaymentGateway::class, function () {
             return match (config('payments.gateway', 'test')) {
-                'paymongo' => new PayMongoGateway(),
-                default    => new TestGateway(),
+                'paymongo' => new PayMongoGateway,
+                default => new TestGateway,
             };
         });
     }
 
     public function boot(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/payments.php', 'payments');
+        $this->mergeConfigFrom(__DIR__.'/../config/payments.php', 'payments');
     }
 }

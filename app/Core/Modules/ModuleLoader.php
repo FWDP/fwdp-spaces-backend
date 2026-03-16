@@ -17,14 +17,18 @@ class ModuleLoader
     {
         $modules = [];
 
-        if (!File::exists($this->modulesPath)) return [];
+        if (! File::exists($this->modulesPath)) {
+            return [];
+        }
 
         $directories = File::directories($this->modulesPath);
 
         foreach ($directories as $directory) {
             $manifest = ModuleManifest::load($directory);
 
-            if (!$manifest) continue;
+            if (! $manifest) {
+                continue;
+            }
 
             $name = $manifest['name'] ?? basename($directory);
 

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Models\User;
 use App\Core\Profile\Models\UserProfile;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +18,9 @@ class ProfileTest extends TestCase
     {
         $user = User::factory()->create();
         UserProfile::create([
-            'user_id'    => $user->id,
+            'user_id' => $user->id,
             'first_name' => 'Peter',
-            'last_name'  => 'Brion',
+            'last_name' => 'Brion',
         ]);
 
         Passport::actingAs($user);
@@ -28,7 +28,7 @@ class ProfileTest extends TestCase
         $response = $this->getJson('/api/profile');
 
         $response->assertStatus(200)
-                 ->assertJsonFragment(['first_name' => 'Peter']);
+            ->assertJsonFragment(['first_name' => 'Peter']);
     }
 
     public function test_unauthenticated_user_cannot_view_profile(): void
@@ -46,7 +46,7 @@ class ProfileTest extends TestCase
         $response = $this->getJson('/api/profile');
 
         $response->assertStatus(200)
-                 ->assertJson([]);
+            ->assertJson([]);
     }
 
     public function test_user_can_update_their_profile(): void
@@ -56,15 +56,15 @@ class ProfileTest extends TestCase
 
         $response = $this->postJson('/api/profile', [
             'first_name' => 'Peter',
-            'last_name'  => 'Brion',
-            'phone'      => '09123456789',
+            'last_name' => 'Brion',
+            'phone' => '09123456789',
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonFragment(['first_name' => 'Peter', 'last_name' => 'Brion']);
+            ->assertJsonFragment(['first_name' => 'Peter', 'last_name' => 'Brion']);
 
         $this->assertDatabaseHas('user_profiles', [
-            'user_id'    => $user->id,
+            'user_id' => $user->id,
             'first_name' => 'Peter',
         ]);
     }
@@ -91,7 +91,7 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['avatar_url']);
+            ->assertJsonValidationErrors(['avatar_url']);
     }
 
     public function test_profile_update_accepts_valid_avatar_url(): void
@@ -135,7 +135,7 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['avatar']);
+            ->assertJsonValidationErrors(['avatar']);
     }
 
     public function test_avatar_upload_rejects_files_over_2mb(): void
@@ -150,7 +150,7 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['avatar']);
+            ->assertJsonValidationErrors(['avatar']);
     }
 
     public function test_old_avatar_is_deleted_when_uploading_new_one(): void
@@ -162,7 +162,7 @@ class ProfileTest extends TestCase
         Storage::disk('public')->put($oldPath, 'fake content');
 
         UserProfile::create([
-            'user_id'     => $user->id,
+            'user_id' => $user->id,
             'avatar_path' => $oldPath,
         ]);
 

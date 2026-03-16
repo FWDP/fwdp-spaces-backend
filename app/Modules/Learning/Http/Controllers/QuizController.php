@@ -30,7 +30,7 @@ class QuizController extends Controller
 
         return [
             'score' => $score,
-            'total' => $quiz->questions->count()
+            'total' => $quiz->questions->count(),
         ];
     }
 }

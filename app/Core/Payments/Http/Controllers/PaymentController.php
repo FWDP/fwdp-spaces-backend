@@ -2,7 +2,6 @@
 
 namespace App\Core\Payments\Http\Controllers;
 
-use App\Core\Payments\Models\Payment;
 use App\Core\Payments\Services\PaymentService;
 use App\Core\Subscriptions\Models\SubscriptionPlan;
 use App\Http\Controllers\Controller;
@@ -19,8 +18,7 @@ class PaymentController extends Controller
 
     public function checkout(
         Request $request
-    )
-    {
+    ) {
         $data = $request->validate([
             'plan_id' => 'required|exists:subscription_plans,id',
         ]);

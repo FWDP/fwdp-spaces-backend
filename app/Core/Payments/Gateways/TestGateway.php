@@ -6,11 +6,10 @@ use App\Core\Payments\Contracts\PaymentGateway;
 
 class TestGateway implements PaymentGateway
 {
-
     public function createPayment(array $data): array
     {
         return [
-            'reference' => 'TEST-' . uniqid(),
+            'reference' => 'TEST-'.uniqid(),
             'status' => 'success',
         ];
     }

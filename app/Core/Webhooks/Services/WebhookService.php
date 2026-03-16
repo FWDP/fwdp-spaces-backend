@@ -27,8 +27,7 @@ class WebhookService
     {
         $headers = [];
 
-        if ($webhook->secret)
-        {
+        if ($webhook->secret) {
             $headers['X-Signature'] = hash_hmac(
                 'sha256',
                 json_encode($payload),

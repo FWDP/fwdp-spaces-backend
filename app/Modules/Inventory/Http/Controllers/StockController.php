@@ -15,14 +15,15 @@ class StockController extends Controller
 
     public function level(int $productId, int $warehouseId): JsonResponse
     {
-        $product   = Product::findOrFail($productId);
+        $product = Product::findOrFail($productId);
         $warehouse = Warehouse::findOrFail($warehouseId);
+
         return response()->json($this->service->getStockLevel($product, $warehouse));
     }
 
     public function adjust(AdjustStockRequest $request, int $productId, int $warehouseId): JsonResponse
     {
-        $product   = Product::findOrFail($productId);
+        $product = Product::findOrFail($productId);
         $warehouse = Warehouse::findOrFail($warehouseId);
 
         $movement = $this->service->adjust(
@@ -40,6 +41,7 @@ class StockController extends Controller
     public function movements(int $productId): JsonResponse
     {
         $product = Product::findOrFail($productId);
+
         return response()->json($this->service->getMovements($product));
     }
 }

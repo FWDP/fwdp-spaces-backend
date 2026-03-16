@@ -5,7 +5,6 @@ namespace App\Core\Notifications\Services;
 use App\Core\Notifications\Events\NotificationCreated;
 use App\Core\Notifications\Models\Notification;
 use App\Models\User;
-use Illuminate\Notifications\Events\NotificationSent;
 
 class NotificationService
 {
@@ -15,8 +14,7 @@ class NotificationService
         string $title,
         string $message,
         array $data = []
-    ): Notification
-    {
+    ): Notification {
         $notification = Notification::query()->create([
             'user_id' => $user->id,
             'type' => $type,

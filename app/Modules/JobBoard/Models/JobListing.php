@@ -30,10 +30,10 @@ class JobListing extends Model
     ];
 
     protected $casts = [
-        'is_remote'  => 'boolean',
+        'is_remote' => 'boolean',
         'salary_min' => 'integer',
         'salary_max' => 'integer',
-        'deadline'   => 'datetime',
+        'deadline' => 'datetime',
     ];
 
     public function category(): BelongsTo

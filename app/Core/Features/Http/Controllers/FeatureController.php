@@ -17,7 +17,7 @@ class FeatureController extends Controller
     {
         return Feature::query()->create($request->validate([
             'key' => 'required|unique:features',
-            'name' => 'required'
+            'name' => 'required',
         ]));
     }
 
@@ -33,7 +33,7 @@ class FeatureController extends Controller
         $feature->delete();
 
         return response()->json([
-            'message' => 'Feature deleted successfully!'
+            'message' => 'Feature deleted successfully!',
         ], 204);
     }
 }

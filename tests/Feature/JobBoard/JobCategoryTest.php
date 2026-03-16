@@ -7,6 +7,7 @@ use App\Modules\JobBoard\Models\JobCategory;
 use App\Modules\JobBoard\Models\JobListing;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Laravel\Passport\Client;
 use Tests\TestCase;
 
 class JobCategoryTest extends TestCase
@@ -14,23 +15,24 @@ class JobCategoryTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        \Laravel\Passport\Client::forceCreate([
-            'name'          => 'Test Personal Access Client',
-            'secret'        => Str::random(40),
+        Client::forceCreate([
+            'name' => 'Test Personal Access Client',
+            'secret' => Str::random(40),
             'redirect_uris' => [],
-            'grant_types'   => ['personal_access', 'refresh_token'],
-            'revoked'       => false,
-            'provider'      => 'users',
+            'grant_types' => ['personal_access', 'refresh_token'],
+            'revoked' => false,
+            'provider' => 'users',
         ]);
 
         $this->admin = User::factory()->create(['role' => 'ADMIN']);
-        $this->user  = User::factory()->create(['role' => 'USER']);
+        $this->user = User::factory()->create(['role' => 'USER']);
     }
 
     public function test_anyone_can_list_categories(): void
@@ -120,11 +122,11 @@ class JobCategoryTest extends TestCase
 
         JobListing::create([
             'category_id' => $cat->id,
-            'posted_by'   => $poster->id,
-            'title'       => 'Dev Job',
+            'posted_by' => $poster->id,
+            'title' => 'Dev Job',
             'description' => 'A job',
-            'type'        => 'full_time',
-            'status'      => 'published',
+            'type' => 'full_time',
+            'status' => 'published',
         ]);
 
         $this->getJson('/api/job-board/categories')

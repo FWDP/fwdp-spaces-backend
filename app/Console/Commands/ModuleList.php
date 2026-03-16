@@ -43,6 +43,7 @@ class ModuleList extends Command
 
         if (empty($modules)) {
             $this->warn('No modules found.');
+
             return CommandAlias::SUCCESS;
         }
 

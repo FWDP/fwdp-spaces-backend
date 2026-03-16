@@ -100,11 +100,11 @@ class JobListingController extends Controller
      */
     public function toggleSave(Request $request, int $jobId): JsonResponse
     {
-        $job   = JobListing::findOrFail($jobId);
+        $job = JobListing::findOrFail($jobId);
         $saved = $this->service->toggleSave($request->user(), $job);
 
         return response()->json([
-            'saved'   => $saved,
+            'saved' => $saved,
             'message' => $saved ? 'Job saved.' : 'Job removed from saved.',
         ]);
     }

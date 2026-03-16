@@ -11,8 +11,12 @@ class ActivityService
     {
         $query = Activity::query()->with(['contact', 'deal'])->orderByDesc('id');
 
-        if ($contactId) $query->where('contact_id', $contactId);
-        if ($dealId)    $query->where('deal_id', $dealId);
+        if ($contactId) {
+            $query->where('contact_id', $contactId);
+        }
+        if ($dealId) {
+            $query->where('deal_id', $dealId);
+        }
 
         return $query->get();
     }
@@ -25,6 +29,7 @@ class ActivityService
     public function complete(Activity $activity): Activity
     {
         $activity->update(['completed_at' => now()]);
+
         return $activity->fresh();
     }
 

@@ -7,6 +7,7 @@ use App\Modules\JobBoard\Models\JobApplication;
 use App\Modules\JobBoard\Models\JobListing;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Laravel\Passport\Client;
 use Tests\TestCase;
 
 class JobApplicationTest extends TestCase
@@ -14,31 +15,33 @@ class JobApplicationTest extends TestCase
     use RefreshDatabase;
 
     protected User $employer;
+
     protected User $applicant;
+
     protected JobListing $job;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        \Laravel\Passport\Client::forceCreate([
-            'name'          => 'Test Personal Access Client',
-            'secret'        => Str::random(40),
+        Client::forceCreate([
+            'name' => 'Test Personal Access Client',
+            'secret' => Str::random(40),
             'redirect_uris' => [],
-            'grant_types'   => ['personal_access', 'refresh_token'],
-            'revoked'       => false,
-            'provider'      => 'users',
+            'grant_types' => ['personal_access', 'refresh_token'],
+            'revoked' => false,
+            'provider' => 'users',
         ]);
 
-        $this->employer  = User::factory()->create();
+        $this->employer = User::factory()->create();
         $this->applicant = User::factory()->create();
 
         $this->job = JobListing::create([
-            'posted_by'   => $this->employer->id,
-            'title'       => 'Software Engineer',
+            'posted_by' => $this->employer->id,
+            'title' => 'Software Engineer',
             'description' => 'Build things.',
-            'type'        => 'full_time',
-            'status'      => 'published',
+            'type' => 'full_time',
+            'status' => 'published',
         ]);
     }
 
@@ -58,9 +61,9 @@ class JobApplicationTest extends TestCase
     public function test_applicant_cannot_apply_twice(): void
     {
         JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -72,11 +75,11 @@ class JobApplicationTest extends TestCase
     public function test_applicant_cannot_apply_to_draft_job(): void
     {
         $draft = JobListing::create([
-            'posted_by'   => $this->employer->id,
-            'title'       => 'Draft Job',
+            'posted_by' => $this->employer->id,
+            'title' => 'Draft Job',
             'description' => 'Not yet open.',
-            'type'        => 'full_time',
-            'status'      => 'draft',
+            'type' => 'full_time',
+            'status' => 'draft',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -88,11 +91,11 @@ class JobApplicationTest extends TestCase
     public function test_applicant_cannot_apply_to_closed_job(): void
     {
         $closed = JobListing::create([
-            'posted_by'   => $this->employer->id,
-            'title'       => 'Closed Job',
+            'posted_by' => $this->employer->id,
+            'title' => 'Closed Job',
             'description' => 'Applications closed.',
-            'type'        => 'full_time',
-            'status'      => 'closed',
+            'type' => 'full_time',
+            'status' => 'closed',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -118,16 +121,16 @@ class JobApplicationTest extends TestCase
     public function test_applicant_can_view_own_applications(): void
     {
         JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $other = User::factory()->create();
         JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $other->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -141,9 +144,9 @@ class JobApplicationTest extends TestCase
     public function test_applicant_can_withdraw_own_application(): void
     {
         $application = JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -157,9 +160,9 @@ class JobApplicationTest extends TestCase
     {
         $other = User::factory()->create();
         $application = JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $other->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->applicant, 'api')
@@ -172,9 +175,9 @@ class JobApplicationTest extends TestCase
     public function test_employer_can_view_applications_for_own_job(): void
     {
         JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->employer, 'api')
@@ -185,19 +188,19 @@ class JobApplicationTest extends TestCase
 
     public function test_employer_cannot_view_applications_of_another_employers_job(): void
     {
-        $other    = User::factory()->create();
+        $other = User::factory()->create();
         $otherJob = JobListing::create([
-            'posted_by'   => $other->id,
-            'title'       => 'Other Job',
+            'posted_by' => $other->id,
+            'title' => 'Other Job',
             'description' => 'Desc',
-            'type'        => 'full_time',
-            'status'      => 'published',
+            'type' => 'full_time',
+            'status' => 'published',
         ]);
 
         JobApplication::create([
-            'job_id'       => $otherJob->id,
+            'job_id' => $otherJob->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->employer, 'api')
@@ -210,9 +213,9 @@ class JobApplicationTest extends TestCase
     public function test_employer_can_update_application_status(): void
     {
         $application = JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->employer, 'api')
@@ -225,19 +228,19 @@ class JobApplicationTest extends TestCase
 
     public function test_employer_cannot_update_status_for_other_employers_application(): void
     {
-        $other    = User::factory()->create();
+        $other = User::factory()->create();
         $otherJob = JobListing::create([
-            'posted_by'   => $other->id,
-            'title'       => 'Other Job',
+            'posted_by' => $other->id,
+            'title' => 'Other Job',
             'description' => 'Desc',
-            'type'        => 'full_time',
-            'status'      => 'published',
+            'type' => 'full_time',
+            'status' => 'published',
         ]);
 
         $application = JobApplication::create([
-            'job_id'       => $otherJob->id,
+            'job_id' => $otherJob->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->employer, 'api')
@@ -250,9 +253,9 @@ class JobApplicationTest extends TestCase
     public function test_update_status_validates_allowed_values(): void
     {
         $application = JobApplication::create([
-            'job_id'       => $this->job->id,
+            'job_id' => $this->job->id,
             'applicant_id' => $this->applicant->id,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $this->actingAs($this->employer, 'api')

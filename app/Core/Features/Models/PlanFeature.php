@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PlanFeature extends Model
 {
     protected $fillable = [
-      'plan_id',
-      'feature_id',
+        'plan_id',
+        'feature_id',
     ];
 }

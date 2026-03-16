@@ -36,6 +36,7 @@ class ContactController extends Controller
     public function destroy(int $contactId): JsonResponse
     {
         $this->service->deleteContact(Contact::findOrFail($contactId));
+
         return response()->json(['message' => 'Contact deactivated.']);
     }
 }

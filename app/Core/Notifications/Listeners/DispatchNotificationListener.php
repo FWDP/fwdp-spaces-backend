@@ -7,7 +7,6 @@ use App\Core\Notifications\Jobs\DispatchNotificationJob;
 
 class DispatchNotificationListener
 {
-
     /**
      * Handle the event.
      */

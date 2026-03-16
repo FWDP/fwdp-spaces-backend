@@ -4,7 +4,6 @@ namespace App\Core\Notifications\Channel;
 
 use App\Core\Notifications\Models\Notification;
 use App\Core\Notifications\Models\NotificationDelivery;
-use App\Models\User;
 
 class InAppChannel
 {

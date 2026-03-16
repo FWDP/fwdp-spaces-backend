@@ -11,12 +11,12 @@ class PermissionMap
     public static function permissionFor(string $ability): ?string
     {
         $map = [
-            'viewAny'  => 'view-any',
-            'view'     => 'view',
-            'create'   => 'create',
-            'update'   => 'update',
-            'delete'   => 'delete',
-            'restore'  => 'restore',
+            'viewAny' => 'view-any',
+            'view' => 'view',
+            'create' => 'create',
+            'update' => 'update',
+            'delete' => 'delete',
+            'restore' => 'restore',
             'forceDelete' => 'force-delete',
         ];
 

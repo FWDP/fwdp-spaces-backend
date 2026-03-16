@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Section extends Model
 {
     protected $fillable = [
-      'course_id',
-      'title',
-      'order'
+        'course_id',
+        'title',
+        'order',
     ];
 
     public function course(): BelongsTo

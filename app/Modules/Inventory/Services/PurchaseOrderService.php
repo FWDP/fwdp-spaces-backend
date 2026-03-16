@@ -29,22 +29,22 @@ class PurchaseOrderService
             $total = collect($items)->sum(fn ($i) => $i['quantity'] * $i['unit_cost']);
 
             $order = PurchaseOrder::query()->create([
-                'supplier_id'  => $data['supplier_id'],
+                'supplier_id' => $data['supplier_id'],
                 'warehouse_id' => $data['warehouse_id'],
-                'created_by'   => $userId,
-                'reference'    => 'PO-' . strtoupper(Str::random(8)),
-                'status'       => 'draft',
-                'total'        => $total,
-                'expected_at'  => $data['expected_at'] ?? null,
+                'created_by' => $userId,
+                'reference' => 'PO-'.strtoupper(Str::random(8)),
+                'status' => 'draft',
+                'total' => $total,
+                'expected_at' => $data['expected_at'] ?? null,
             ]);
 
             foreach ($items as $item) {
                 PurchaseOrderItem::query()->create([
                     'purchase_order_id' => $order->id,
-                    'product_id'        => $item['product_id'],
-                    'quantity'          => $item['quantity'],
-                    'unit_cost'         => $item['unit_cost'],
-                    'total'             => $item['quantity'] * $item['unit_cost'],
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_cost' => $item['unit_cost'],
+                    'total' => $item['quantity'] * $item['unit_cost'],
                 ]);
             }
 
@@ -71,6 +71,7 @@ class PurchaseOrderService
             }
 
             $order->update(['status' => 'received']);
+
             return $order->fresh(['supplier', 'warehouse', 'items.product']);
         });
     }
@@ -78,6 +79,7 @@ class PurchaseOrderService
     public function updateStatus(PurchaseOrder $order, string $status): PurchaseOrder
     {
         $order->update(['status' => $status]);
+
         return $order->fresh();
     }
 }
