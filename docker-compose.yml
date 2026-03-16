@@ -1,0 +1,50 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: httpd:2.4
+    container_name: msme_app
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/apache/vhost.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - msme_net
+
+  postgres:
+    image: postgres:16
+    container_name: msme_postgres
+    environment:
+      POSTGRES_DB: msme_backend_base
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - msme_net
+
+  redis:
+    image: redis:7
+    container_name: msme_redis
+    ports:
+      - "6377:6379"
+    networks:
+      - msme_net
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: msme_mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - msme_net
+
+networks:
+  msme_net:
+    external: true
